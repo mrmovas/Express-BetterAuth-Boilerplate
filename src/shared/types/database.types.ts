@@ -1,38 +1,47 @@
+import { Generated, ColumnType, Insertable, Selectable, Updateable } from 'kysely'
 import { z } from 'zod';
 
 
 
 
-// USER TABLE
-const usersSchema = z.object({
-    id: z.string(),
-    username: z.string().min(3).max(20),
-    fullName: z.string().min(3).max(50),
-    passwordHashed: z.string(),
-    email: z.email(),
-    emailVerified: z.boolean().default(false),
-    phone: z.string().optional(),
-    role: z.string().default('UNASSIGNED'),
-    isActive: z.boolean(),
-    lastLoginAt: z.coerce.date(),
-    createdAt: z.coerce.date(),
-    updatedAt: z.coerce.date(),
-});
+// USERS TABLE
+export interface UsersTable {
+    id: Generated<string>;
+    firstName: string;
+    lastName: string;
+    passwordHashed: string;
+    email: string;
+    emailVerified: Generated<boolean>;
+    phone: {
+        countryCode: string;
+        number: string;
+    };
+    role: string;
+    isActive: boolean;
+    lastLoginAt: ColumnType<Date, never, Date>; // Allow setting Date on insert/update, but always return Date on select
+    createdAt: Generated<Date>;
+    updatedAt: Generated<Date>;
+}
 
-export type Users = z.infer<typeof usersSchema>; 
+
+export type Users = Selectable<UsersTable>;
+export type UserInsert = Insertable<UsersTable>;
+export type UserUpdate = Updateable<UsersTable>;
 
 
 
 
 // TOKENS TABLE
-const tokensSchema = z.object({
-    id: z.string(),
-    userID: z.string(),
-    tokenHashed: z.string(),
-    tokenType: z.enum(['EMAIL_VERIFICATION', 'PASSWORD_RESET']),
-    expiresAt: z.coerce.date(),
-    usedAt: z.coerce.date().optional(),
-    createdAt: z.coerce.date(),
-});
+export interface TokensTable {
+    id: Generated<string>;
+    userID: string;
+    tokenHashed: string;
+    tokenType: 'EMAIL_VERIFICATION' | 'PASSWORD_RESET';
+    expiresAt: Date;
+    usedAt?: Date;
+    createdAt: Generated<Date>;
+}
 
-export type Tokens = z.infer<typeof tokensSchema>;
+export type Tokens = Selectable<TokensTable>;
+export type TokenInsert = Insertable<TokensTable>;
+export type TokenUpdate = Updateable<TokensTable>;

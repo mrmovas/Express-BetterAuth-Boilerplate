@@ -76,7 +76,11 @@ process.on('uncaughtException', (error) => {
 });
 
 process.on('unhandledRejection', (reason) => {
-    logger.error('Unhandled Rejection', { reason });
+    const errorDetails = {
+        message: reason instanceof Error ? reason.message : reason,
+        stack: reason instanceof Error ? reason.stack : new Error().stack,
+    };
+    logger.error('Unhandled Rejection', { errorDetails });
     process.exit(1);
 });
 

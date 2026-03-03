@@ -1,9 +1,9 @@
 import { Kysely, PostgresDialect, sql } from 'kysely';
 import { Pool } from 'pg';
 
-import { Users, Tokens } from '../shared/types/database.types';
+import { UsersTable, TokensTable } from '../shared/types/database.types';
 import { logger } from '../shared/utils/logger.util';
-import env from './env.config';
+import { env } from './env.config';
 
 
 
@@ -34,21 +34,41 @@ pool.on('error', (err) => {
 
 
 // CREATE KYSLEY INSTANCE
-interface Database {
-    users: Users;
-    tokens: Tokens;
+export interface Database {
+    users: UsersTable;
+    tokens: TokensTable;
 }
 
+
+// Threshold in ms above which a query is considered slow and logged at warn
+const SLOW_QUERY_THRESHOLD_MS = 500;
 
 export const database = new Kysely<Database>({
     dialect: new PostgresDialect({ pool }),
     log(event) {
         if(event.level === 'query') {
-            logger.debug('Database query', {
+            const duration = event.queryDurationMillis;
+
+            // Log slow queries at warn level
+            if(duration > SLOW_QUERY_THRESHOLD_MS) logger.warn('Slow database query', {
+                sql: event.query.sql,
+                duration: `${duration}ms`,
+                threshold: `${SLOW_QUERY_THRESHOLD_MS}ms`,
+            });
+
+            // Log all queries at debug level
+            else logger.debug('Database query', {
                 sql: event.query.sql,
                 duration: event.queryDurationMillis,
             });
         }
+
+        else if(event.level === 'error') {
+            logger.error('Database error', {
+                sql: event.query.sql,
+                error: event.error,
+            });
+        }                
     },
 })
 
@@ -74,7 +94,6 @@ export const testConnection = async (): Promise<boolean> => {
 export const closeDatabase = async (): Promise<void> => {
     try {
         await database.destroy();
-        await pool.end();
         logger.info('Database connections closed');
     } catch (error) {
         logger.error('Error closing database connections', { error });

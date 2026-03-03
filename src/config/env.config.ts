@@ -16,18 +16,18 @@ const envSchema = z.object({
     DB_USER: z.string().nonempty('[ENV] Database user is required'),
     DB_PASSWORD: z.string().nonempty('[ENV] Database password is required'),
     DB_NAME: z.string().nonempty('[ENV] Database name is required'),
-    DB_POOL_MIN: z.string().transform(Number).pipe(z.number().min(0)).default(2),
-    DB_POOL_MAX: z.string().transform(Number).pipe(z.number().min(1)).default(10),
+    DB_POOL_MIN: z.string().default('2').transform(Number).pipe(z.number().min(0)),
+    DB_POOL_MAX: z.string().default('10').transform(Number).pipe(z.number().min(1)),
 
     // SESSION
     SESSION_SECRET: z.string().min(32, '[ENV] Session secret must be at least 32 characters'),
     SESSION_NAME: z.string().default('sid'),
-    SESSION_MAX_AGE: z.string().transform(Number).pipe(z.number().positive()).default(86400000), // 1 day
+    SESSION_MAX_AGE: z.string().default((1000 * 60 * 60 * 24).toString()).transform(Number).pipe(z.number().positive()), // 1 day in ms
 
     // SECURITY
-    BCRYPT_ROUNDS: z.string().transform(Number).pipe(z.number().min(10).max(15)).default(12),
-    RATE_LIMIT_WINDOW_MS: z.string().transform(Number).pipe(z.number().positive()).default(900000), // 15 min
-    RATE_LIMIT_MAX_REQUESTS: z.string().transform(Number).pipe(z.number().positive()).default(100),
+    BCRYPT_ROUNDS: z.string().default('12').transform(Number).pipe(z.number().min(10).max(15)),
+    RATE_LIMIT_WINDOW_MS: z.string().default('900000').transform(Number).pipe(z.number().positive()), // 15 min
+    RATE_LIMIT_MAX_REQUESTS: z.string().default('100').transform(Number).pipe(z.number().positive()),
 
     // EMAIL
     EMAIL_HOST: z.string(),
@@ -35,15 +35,15 @@ const envSchema = z.object({
     EMAIL_USER: z.email(),
     EMAIL_PASS: z.string(),
     EMAIL_FROM: z.email(),
-    EMAIL_SECURE: z.string().transform(val => val === 'true').default(false),
+    EMAIL_SECURE: z.string().default('false').transform(val => val === 'true'),
 
     // APPLICATION
     APP_URL: z.url().default('http://localhost:3000'),
     FRONTEND_URL: z.url().default('http://localhost:3000'),
 
     // TOKENS
-    VERIFICATION_TOKEN_EXPIRY_HOURS: z.string().transform(Number).pipe(z.number().positive()).default(24),
-    PASSWORD_RESET_TOKEN_EXPIRY_HOURS: z.string().transform(Number).pipe(z.number().positive()).default(1),
+    VERIFICATION_TOKEN_EXPIRY_HOURS: z.string().default('24').transform(Number).pipe(z.number().positive()),
+    PASSWORD_RESET_TOKEN_EXPIRY_HOURS: z.string().default('1').transform(Number).pipe(z.number().positive()),
   
     // LOGGING
     LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),

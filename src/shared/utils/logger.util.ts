@@ -1,5 +1,6 @@
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+import { Request } from 'express';
 
 import { env } from '../../config/env.config';
 
@@ -35,7 +36,7 @@ const consoleFormat = winston.format.combine(
 export const logger = winston.createLogger({
     level: env.LOG_LEVEL,
     format: customFormat,
-    defaultMeta: { service: 'easy2-API' },
+    defaultMeta: { service: 'auth-API' },
     transports: [
         // CONSOLE OUTPUT
         new winston.transports.Console({ format: env.NODE_ENV === 'production' ? customFormat : consoleFormat }),
@@ -50,15 +51,46 @@ export const logger = winston.createLogger({
             maxFiles: '30d',          // Automatically delete files older than 30 days
             level: 'info'             // Includes info, warn, error, and http
         }),
+
+        // SEPARATE FILE FOR WARNINGS AND ERRORS
+        new DailyRotateFile({
+            filename: 'logs/security/%DATE%-security.log',
+            datePattern: 'YYYY-MM-DD',
+            zippedArchive: true,
+            maxSize: '10m',
+            maxFiles: '90d',   // Keep security logs longer
+            level: 'warn',
+        }),
     ]
 });
 
 
 
 
+/**
+ * Extract a consistent request context object from an Express request.
+ * Attach this to every log that is triggered within a request lifecycle
+ * so you can trace exactly who did what, from where, and when.
+ */
+export function reqCtx(req: Request) {
+    return {
+        requestId: req.res?.locals?.requestId,          // Set by requestIdMiddleware
+        ip: req.ip ?? req.socket?.remoteAddress,        // Client IP
+        method: req.method,
+        path: req.path,
+        userAgent: req.get('user-agent'),
+        userId: req.session?.user?.id ?? null,          // Null if unauthenticated
+    };
+}
+
+
+
+
 // STREAM FOR MORGAN HTTP LOGGER
+const TOKEN_REDACT_REGEX = /(token=)[^&\s]+/g;
+
 export const morganStream = {
     write: (message: string) => {
-        logger.http(message.trim());
+        logger.http(message.replace(TOKEN_REDACT_REGEX, '$1[REDACTED]').trim());
     }
 };

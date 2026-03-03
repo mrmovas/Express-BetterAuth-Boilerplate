@@ -1,6 +1,5 @@
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
-import crypto from 'crypto';
 import { Pool } from 'pg';
 
 import { env, isProduction } from '../../config/env.config';
@@ -38,7 +37,7 @@ export const sessionMiddleware = session({
     store: new PGSession({
         pool: sessionPool,
         tableName: 'sessions',
-        createTableIfMissing: false, // Use migrations instead
+        createTableIfMissing: true,
         pruneSessionInterval: 60 * 15, // Cleanup every 15 minutes
     }),
 
@@ -58,11 +57,6 @@ export const sessionMiddleware = session({
     },
 
     rolling: false, // Don't reset maxAge on every response
-
-    // Prevent session fixation attacks
-    genid: () => {
-        return crypto.randomBytes(32).toString('hex');
-    },
 })
 
 
@@ -71,11 +65,12 @@ export const sessionMiddleware = session({
 /**
  * Extend Express Session type
  */
-// declare module 'express-session' {
-//     interface SessionData {
-//         user?: {
-//             ...
-//         };
-//         ...
-//     }
-// }
+declare module 'express-session' {
+    interface SessionData {
+        user?: {
+            id: string;
+            // ...
+        };
+        // ...
+    }
+}

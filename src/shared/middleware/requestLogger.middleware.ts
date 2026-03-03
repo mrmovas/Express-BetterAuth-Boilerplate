@@ -10,6 +10,7 @@ import { logger, morganStream } from '../utils/logger.util';
 
 
 // GENERATE UNIQUE REQUEST ID
+// Makes every log line traceable back to a single request.
 export const requestIdMiddleware = (req: Request, res: Response, next: NextFunction): void => {
     const requestId = uuidv4();
     res.locals.requestId = requestId;
@@ -21,6 +22,7 @@ export const requestIdMiddleware = (req: Request, res: Response, next: NextFunct
 
 
 // MORGAN HTTP REQUEST LOGGER
+// Logs the raw HTTP line - method, url, status, duration, ip.
 export const requestLoggerMiddleware = morgan(
     isProduction
         ? ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" - :response-time ms'
@@ -43,26 +45,28 @@ export const detailedRequestLogger = (req: Request, res: Response, next: NextFun
 
     logger.info('Incoming request', {
         requestId: res.locals.requestId,
+        ip: req.ip,
         method: req.method,
         path: req.path,
-        query: req.query,
-        ip: req.ip,
+        query: Object.keys(req.query).length > 0 ? Object.keys(req.query) : undefined, // Log keys only, never values
         userAgent: req.get('user-agent'),
-        userId: req.session.user?.id,
+        userID: req.session?.user?.id ?? null,
     });
 
 
     // Log response when finished
     res.on('finish', () => {
         const duration = Date.now() - startTime;
+        const level = res.statusCode >= 500 ? 'error' : res.statusCode >= 400 ? 'warn' : 'info';
 
         logger.info('Request completed', {
             requestId: res.locals.requestId,
+            ip: req.ip,
             method: req.method,
             path: req.path,
             statusCode: res.statusCode,
             duration: `${duration}ms`,
-            userId: req.session.user?.id,
+            userID: req.session?.user?.id ?? null,
         });
     });
 

@@ -11,7 +11,7 @@ import { sessionMiddleware } from './shared/middleware/session.middleware';
 import { generalRateLimiterMiddleware } from './shared/middleware/ratelimit.middleware';
 
 //ROUTES
-//import authRoutes from './modules/auth/auth.routes';
+import authRoutes from './core/auth/auth.route';
 //import userRoutes from './modules/user/user.routes';
 
 
@@ -32,7 +32,7 @@ app.use(helmet({
 }));
 
 app.use(cors({
-    origin: env.FRONTEND_URL || env.APP_URL,
+    origin: [env.FRONTEND_URL, env.APP_URL].filter(Boolean), // Allow requests from frontend and backend URLs defined in env
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -90,10 +90,8 @@ app.use(generalRateLimiterMiddleware);
  * API ROUTES
  */
 
-//app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 //app.use('/api/users', userRoutes);
-
-//ROUTE ROUTE
 
 
 
