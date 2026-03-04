@@ -2,7 +2,7 @@ import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { Request } from 'express';
 
-import { env } from '../../config/env.config';
+import { env } from '@/config/env.config';
 
 
 

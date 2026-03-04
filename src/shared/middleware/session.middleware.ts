@@ -2,7 +2,7 @@ import session from 'express-session';
 import connectPg from 'connect-pg-simple';
 import { Pool } from 'pg';
 
-import { env, isProduction } from '../../config/env.config';
+import { env, isProduction } from '@/config/env.config';
 
 const PGSession = connectPg(session);
 

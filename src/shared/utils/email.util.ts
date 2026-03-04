@@ -1,9 +1,9 @@
-import { getEmailTransporter } from '../../config/email.config';
+import { getEmailTransporter } from '@/config/email.config';
 
-import { env } from '../../config/env.config';
+import { env } from '@/config/env.config';
 
-import { logger } from './logger.util';
-import { getCtx } from './requestContext.utils';
+import { logger } from '@/shared/utils/logger.util';
+import { getCtx } from '@/shared/utils/requestContext.utils';
 
 
 

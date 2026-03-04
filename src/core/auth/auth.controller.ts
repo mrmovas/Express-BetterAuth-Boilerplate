@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 
-import { SignupInput, VerifyEmailInput } from './auth.validation';
+import { SignupInput, VerifyEmailInput } from '@/core/auth/auth.validation';
 
 // UTILS
-import { sendSuccess, sendConflict, sendError } from '../../shared/utils/response.util';
-import { hashToken } from '../../shared/utils/crypto.util';
-import { logger, reqCtx } from '../../shared/utils/logger.util';
+import { sendSuccess, sendConflict, sendError } from '@/shared/utils/response.util';
+import { hashToken } from '@/shared/utils/crypto.util';
+import { logger, reqCtx } from '@/shared/utils/logger.util';
 
 // SERVICE
-import { signupService, verifyEmailService } from './auth.service'
+import { signupService, verifyEmailService } from '@/core/auth/auth.service'
 
 
 

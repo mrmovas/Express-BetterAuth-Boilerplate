@@ -1,11 +1,11 @@
 import { Kysely, PostgresDialect, sql } from 'kysely';
 import { Pool } from 'pg';
 
-import { UsersTable, TokensTable } from '../shared/types/database.types';
-import { logger } from '../shared/utils/logger.util';
-import { getCtx } from '../shared/utils/requestContext.utils';
+import { UsersTable, TokensTable } from '@/shared/types/database.types';
+import { logger } from '@/shared/utils/logger.util';
+import { getCtx } from '@/shared/utils/requestContext.utils';
 
-import { env } from './env.config';
+import { env } from '@/config/env.config';
 
 
 

@@ -1,13 +1,13 @@
-import { database } from "../../config/database.config";
-import { UserInsert } from "../../shared/types/database.types";
+import { database } from "@/config/database.config";
+import { UserInsert } from "@/shared/types/database.types";
 
-import { hashPassword, comparePassword } from "../../shared/utils/crypto.util";
-import { sendVerificationEmail, /*sendPasswordResetEmail, sendWelcomeEmail*/ } from "../../shared/utils/email.util";
+import { hashPassword, comparePassword } from "@/shared/utils/crypto.util";
+import { sendVerificationEmail, /*sendPasswordResetEmail, sendWelcomeEmail*/ } from "@/shared/utils/email.util";
 import { createTokenService, verifyTokenService } from "../token/token.service";
-import { logger } from "../../shared/utils/logger.util";
-import { getCtx } from "../../shared/utils/requestContext.utils";
+import { logger } from "@/shared/utils/logger.util";
+import { getCtx } from "@/shared/utils/requestContext.utils";
 
-import { SignupInput } from "./auth.validation";
+import { SignupInput } from "@/core/auth/auth.validation";
 
 
 

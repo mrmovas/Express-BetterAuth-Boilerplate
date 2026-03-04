@@ -3,15 +3,15 @@ import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
 
-import { env, isProduction } from './config/env.config';
+import { env, isProduction } from '@/config/env.config';
 
 //MIDDLEWARE
-import { requestIdMiddleware, requestLoggerMiddleware } from './shared/middleware/requestLogger.middleware';
-import { sessionMiddleware } from './shared/middleware/session.middleware';
-import { generalRateLimiterMiddleware } from './shared/middleware/ratelimit.middleware';
+import { requestIdMiddleware, requestLoggerMiddleware } from '@/shared/middleware/requestLogger.middleware';
+import { sessionMiddleware } from '@/shared/middleware/session.middleware';
+import { generalRateLimiterMiddleware } from '@/shared/middleware/ratelimit.middleware';
 
 //ROUTES
-import authRoutes from './core/auth/auth.route';
+import authRoutes from '@/core/auth/auth.route';
 //import userRoutes from './modules/user/user.routes';
 
 

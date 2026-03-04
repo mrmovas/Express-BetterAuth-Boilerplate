@@ -2,14 +2,14 @@ import { Router } from 'express';
 const router = Router();
 
 // CONTROLLER
-import { signupController, verifyEmailController } from './auth.controller';
+import { signupController, verifyEmailController } from '@/core/auth/auth.controller';
 
 // MIDDLEWARE
-import { authRateLimiterMiddleware } from '../../shared/middleware/ratelimit.middleware';
-import { validateMiddleware } from '../../shared/middleware/validation.middleware';
+import { authRateLimiterMiddleware } from '@/shared/middleware/ratelimit.middleware';
+import { validateMiddleware } from '@/shared/middleware/validation.middleware';
 
 // SCHEMA
-import { signupSchema, verifyEmailSchema } from './auth.validation';
+import { signupSchema, verifyEmailSchema } from '@/core/auth/auth.validation';
 
 
 

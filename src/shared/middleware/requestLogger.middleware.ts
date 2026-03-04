@@ -2,10 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import morgan from 'morgan';
 
-import { isProduction } from '../../config/env.config';
+import { isProduction } from '@/config/env.config';
 
-import { logger, morganStream } from '../utils/logger.util';
-import { requestContext } from '../utils/requestContext.utils';
+import { logger, morganStream } from '@/shared/utils/logger.util';
+import { requestContext } from '@/shared/utils/requestContext.utils';
 
 
 

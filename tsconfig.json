@@ -22,7 +22,10 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["node", "express"]
+    "types": ["node", "express"],
+    "paths": {
+      "@/*": ["./src/*"] 
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { env } from '../../config/env.config';
+import { env } from '@/config/env.config';
 
 
 

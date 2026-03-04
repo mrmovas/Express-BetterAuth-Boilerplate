@@ -1,5 +1,4 @@
 import { Generated, ColumnType, Insertable, Selectable, Updateable } from 'kysely'
-import { z } from 'zod';
 
 
 

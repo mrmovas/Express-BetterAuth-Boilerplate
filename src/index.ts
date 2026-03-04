@@ -1,10 +1,10 @@
 import http from 'http';
-import app from './app';
+import app from '@/app';
 
-import { env } from './config/env.config';
-import { testConnection, closeDatabase } from './config/database.config';
-import { initializeEmailTransporter } from './config/email.config';
-import { logger } from './shared/utils/logger.util';
+import { env } from '@/config/env.config';
+import { testConnection, closeDatabase } from '@/config/database.config';
+import { initializeEmailTransporter } from '@/config/email.config';
+import { logger } from '@/shared/utils/logger.util';
 
 
 

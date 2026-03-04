@@ -1,13 +1,13 @@
 import { Kysely, Transaction } from 'kysely';
-import { Database } from '../../config/database.config';
+import { Database } from '@/config/database.config';
 
-import { database } from '../../config/database.config';
-import { TokensTable, TokenInsert } from '../../shared/types/database.types';
-import { env } from '../../config/env.config';
+import { database } from '@/config/database.config';
+import { TokensTable, TokenInsert } from '@/shared/types/database.types';
+import { env } from '@/config/env.config';
 
-import { generateAndHashToken, hashToken } from '../../shared/utils/crypto.util';
-import { logger } from '../../shared/utils/logger.util';
-import { getCtx } from '../../shared/utils/requestContext.utils';
+import { generateAndHashToken, hashToken } from '@/shared/utils/crypto.util';
+import { logger } from '@/shared/utils/logger.util';
+import { getCtx } from '@/shared/utils/requestContext.utils';
 
 
 
