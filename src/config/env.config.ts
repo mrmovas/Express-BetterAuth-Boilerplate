@@ -10,15 +10,11 @@ const envSchema = z.object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     PORT: z.string().default('3000'),
 
+    // LOGGING
+    LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
+
     // DATABASE
-    DB_HOST: z.string().nonempty('[ENV] Database host is required'),
-    DB_PORT: z.string().nonempty('[ENV] Database port is required').transform(Number).pipe(z.number().min(1).max(65535)),
-    DB_USER: z.string().nonempty('[ENV] Database user is required'),
-    DB_PASSWORD: z.string().nonempty('[ENV] Database password is required'),
-    DB_NAME: z.string().nonempty('[ENV] Database name is required'),
-    DB_POOL_MIN: z.string().default('2').transform(Number).pipe(z.number().min(0)),
-    DB_POOL_MAX: z.string().default('10').transform(Number).pipe(z.number().min(1)),
-    DB_URL: z.string().optional(),
+    DATABASE_URL: z.string().nonempty('[ENV] Database URL is required'),
 
     // SESSION
     SESSION_SECRET: z.string().min(32, '[ENV] Session secret must be at least 32 characters'),
@@ -45,9 +41,6 @@ const envSchema = z.object({
     // TOKENS
     VERIFICATION_TOKEN_EXPIRY_HOURS: z.string().default('24').transform(Number).pipe(z.number().positive()),
     PASSWORD_RESET_TOKEN_EXPIRY_HOURS: z.string().default('1').transform(Number).pipe(z.number().positive()),
-  
-    // LOGGING
-    LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
 });
 
 

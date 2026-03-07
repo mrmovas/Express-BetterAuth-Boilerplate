@@ -2,6 +2,8 @@ import express, { Application } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
+import ejsLayouts from 'express-ejs-layouts';
+import path from 'path';
 
 import { env, isProduction } from '@/config/env.config';
 
@@ -11,6 +13,7 @@ import { sessionMiddleware } from '@/shared/middleware/session.middleware';
 import { generalRateLimiterMiddleware } from '@/shared/middleware/ratelimit.middleware';
 
 //ROUTES
+import webRoutes from '@/core/web/web.route';
 import authRoutes from '@/core/auth/auth.route';
 //import userRoutes from './modules/user/user.routes';
 
@@ -49,10 +52,26 @@ app.use(cors({
  * - app.set('trust proxy', 1): This tells Express to trust the first proxy in front of it (like a load balancer), which allows req.ip to correctly identify the client's IP address instead of the proxy's IP. This is important for accurate logging and rate limiting based on client IP.
  */
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 app.use(compression());
 app.set('trust proxy', 1); // Trust first proxy, enables req.ip to resolve correctly
+
+
+
+
+/**
+ * VIEW ENGINE SETUP
+ * - view engine: Sets EJS as the templating engine for rendering views.
+ * - views: Specifies the directory where the view templates are located.
+ * - layout: Sets the default layout file for EJS templates.
+ * - express-ejs-layouts: Middleware to support layout files in EJS, allowing for consistent structure across different views.
+ */
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, './views'));
+app.set('layout', 'layout');
+app.use(ejsLayouts);
+app.use(express.static(path.join(__dirname, '../public')));
 
 
 
@@ -92,8 +111,8 @@ app.use(generalRateLimiterMiddleware);
  * API ROUTES
  */
 
-app.use('/api/auth', authRoutes);
-//app.use('/api/users', userRoutes);
+app.use('/', webRoutes);  
+//app.use('/api/auth', authRoutes);
 
 
 

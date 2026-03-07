@@ -25,9 +25,6 @@ async function invalidateUserTokens(userID: string, type: TokenType, db: PrismaT
                 usedAt: { equals: null },
             },
             data: { usedAt: new Date() },
-        }).catch(error => {
-            logger.error('Error invalidating user tokens', { userId: userID, tokenType: type, error, ...getCtx() });
-            throw error;
         });
         
         // Only log if there was actually something to invalidate
@@ -94,7 +91,11 @@ export async function createTokenService(userID: string, type: TokenType, db: Pr
 
 
 // VERIFY TOKEN
-export async function verifyTokenService(token: string, type: TokenType, db: PrismaTransactionClient): Promise<string | null> {
+type VerifyTokenResult =
+    | { success: true; userID: string }
+    | { success: false; reason: 'INVALID_TOKEN' | 'EXPIRED_TOKEN' | 'TOKEN_REUSE' };
+
+export async function verifyTokenService(token: string, type: TokenType, db: PrismaTransactionClient): Promise<VerifyTokenResult> {
     const hash = hashToken(token);
 
     const existingToken = await db.token.findFirst({
@@ -112,36 +113,36 @@ export async function verifyTokenService(token: string, type: TokenType, db: Pri
     // No token found
     if(!existingToken) {
         logger.warn('Token verification failed: token not found', { tokenType: type, ...getCtx() });
-        return null;
+        return { success: false, reason: 'INVALID_TOKEN' };
     }
 
-    // If the token was already used, check if the user is already verified.
-    if(existingToken.usedAt) {
+
+    if(existingToken.usedAt && type === 'EMAIL_VERIFICATION') {
         const user = await db.user.findUnique({
             where: { id: existingToken.userID },
             select: { emailVerified: true }
         });
-        
-        // If they are already verified, just return the ID. 
-        // The Controller can then say "Welcome back!" instead of "Error!"
+
         if(user?.emailVerified) {
             logger.info('Verification link re-visited by already-verified user', {
                 userId: existingToken.userID,
                 tokenType: type,
                 ...getCtx(),
             });
-            return existingToken.userID;
+            return { success: true, userID: existingToken.userID };
         }
+    }
 
-        // Token was used but user is still unverified. Possible replay attack?
-        logger.warn('Token reuse attempt detected', {
+    if(existingToken.usedAt && type === 'PASSWORD_RESET') {
+        logger.warn('Password reset token reuse attempt detected', {
             userId: existingToken.userID,
             tokenType: type,
             ...getCtx(),
         });
-        return null; 
+        return { success: false, reason: 'TOKEN_REUSE' };
     }
 
+    
     if(new Date() > existingToken.expiresAt) {
         logger.warn('Token verification failed: token expired', {
             userId: existingToken.userID,
@@ -149,7 +150,7 @@ export async function verifyTokenService(token: string, type: TokenType, db: Pri
             expiredAt: existingToken.expiresAt.toISOString(),
             ...getCtx(),
         });
-        return null;
+        return { success: false, reason: 'EXPIRED_TOKEN' };
     }
 
     // First time use - mark as used
@@ -168,5 +169,5 @@ export async function verifyTokenService(token: string, type: TokenType, db: Pri
         ...getCtx(),
     });
 
-    return existingToken.userID;
+    return { success: true, userID: existingToken.userID };
 }

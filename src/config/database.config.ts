@@ -13,7 +13,7 @@ const SLOW_QUERY_THRESHOLD_MS = 500;
 
 // PRISMA CLIENT (singleton)
 // In development, hot-reload can create multiple instances — this pattern prevents that.
-const adapter = new PrismaPg({ connectionString: env.DB_URL });
+const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
 const prisma = new PrismaClient({ 
     adapter,
     log: [

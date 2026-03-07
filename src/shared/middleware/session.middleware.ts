@@ -3,7 +3,8 @@ import connectPg from 'connect-pg-simple';
 import { Pool } from 'pg';
 
 import { env, isProduction } from '@/config/env.config';
-
+import { SessionUser} from '@/shared/types';
+ 
 const PGSession = connectPg(session);
 
 
@@ -14,8 +15,8 @@ const PGSession = connectPg(session);
  * Separate from main pool to avoid session-related connection issues
  */
 const sessionPool = new Pool({
-  connectionString: `postgresql://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`,
-  max: 5, // Sessions don't need many connections
+    connectionString: env.DATABASE_URL,
+    max: 5, // Sessions don't need many connections
 });
 
 
@@ -38,7 +39,7 @@ export const sessionMiddleware = session({
         pool: sessionPool,
         tableName: 'sessions',
         createTableIfMissing: true,
-        pruneSessionInterval: 60 * 15, // Cleanup every 15 minutes
+        pruneSessionInterval: 60 * 60, // Cleanup every 1 hour
     }),
 
     name: env.SESSION_NAME, // Custom cookie name for security through obscurity
@@ -67,10 +68,6 @@ export const sessionMiddleware = session({
  */
 declare module 'express-session' {
     interface SessionData {
-        user?: {
-            id: string;
-            // ...
-        };
-        // ...
+        user?: SessionUser;
     }
 }
