@@ -1,0 +1,42 @@
+<div class="hero">
+    <div class="badge">auth boilerplate</div>
+
+    <h1>
+        Your app<br>
+        <em>starts here.</em>
+    </h1>
+
+    <p class="sub">
+        A minimal Express + EJS SSR auth setup using Better-Auth.
+        Register, verify your email, and access your profile.
+    </p>
+
+    <div class="actions">
+        <% if (locals.user) { %>
+            <p style="color:var(--muted)">Welcome back, <strong style="color:var(--text)"><%= user.firstName %> <%= user.lastName %></strong></p>
+            <a href="/profile" class="btn-primary">Go to profile →</a>
+            <button type="button" class="btn-ghost" onclick="handleLogout()">Logout</button>
+        <% } else { %>
+            <a href="/auth" class="btn-primary">Get started →</a>
+            <a href="/auth" class="btn-ghost">Login</a>
+        <% } %>
+    </div>
+
+    <div class="stack">
+        <span>Express</span> · <span>Better-Auth</span> · <span>Prisma</span> · <span>PostgreSQL</span> · <span>EJS</span>
+    </div>
+</div>
+
+<% if (locals.user) { %>
+<script>
+// ---------------------------------------------------------------------------
+// LOGOUT (home page)
+// betterAuthClient.signOut()
+// ---------------------------------------------------------------------------
+async function handleLogout() {
+    const { error } = await betterAuthClient.signOut();
+    if (error) return alert(error.message ?? 'Sign out failed.');
+    window.location.href = '/';
+}
+</script>
+<% } %>

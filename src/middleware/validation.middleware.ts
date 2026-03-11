@@ -111,12 +111,12 @@ export const validateMiddleware = <T>(schema: ZodType<T>, location: 'body' | 'qu
                 }));
                 
                 logger.warn('Request validation failed', {
-                    ...reqCtx(req),
                     location,
                     isSuspicious: analysis.isSuspicious,
                     threatType: analysis.threatType,
                     inputKeys: Object.keys(rawInput), // Which fields were attempted to be validated
                     validationErrors: validationErrors, // Include validation error details in the log
+                    ...reqCtx(req),
                 });
 
                 sendValidationError(res, validationErrors);

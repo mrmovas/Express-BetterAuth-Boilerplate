@@ -20,6 +20,9 @@ const envSchema = z.object({
     SESSION_SECRET: z.string().min(32, '[ENV] Session secret must be at least 32 characters'),
     SESSION_NAME: z.string().default('sid'),
     SESSION_MAX_AGE: z.string().default((1000 * 60 * 60 * 24).toString()).transform(Number).pipe(z.number().positive()), // 1 day in ms
+    BETTER_AUTH_SECRET: z.string().min(32, '[ENV] BetterAuth secret must be at least 32 characters'),
+    BETTER_AUTH_BASE_URL: z.url().default('http://localhost:3000'),
+    BETTER_AUTH_LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
 
     // SECURITY
     BCRYPT_ROUNDS: z.string().default('12').transform(Number).pipe(z.number().min(10).max(15)),

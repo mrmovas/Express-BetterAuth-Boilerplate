@@ -1,62 +1,72 @@
+
 generator client {
-    provider = "prisma-client"
-    output   = "../src/generated/prisma"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-    provider = "postgresql"
+  provider = "postgresql"
 }
-
-
-
-
-// ============================================================
-// TABLES
-// ============================================================
 
 model User {
-  id             String   @id @default(uuid())
-  firstName      String
-  lastName       String
-  passwordHashed String
-  email          String   @unique
-  emailVerified  Boolean  @default(false)
-  phone          Json     // { countryCode: string, number: string }
-  role           String   @default("UNASSIGNED")
-  lastLoginAt    DateTime?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt      // Prisma auto-updates this on every update
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
 
-  tokens         Token[]  // Relation — lets you do prisma.user.findFirst({ include: { tokens: true } })
-
-  @@map("users")          // Maps to the existing "users" table name in PostgreSQL
+  @@unique([email])
+  @@map("user")
 }
 
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-
-
-model Token {
-  id           String    @id @default(uuid())
-  userID       String
-  tokenHashed  String
-  tokenType    TokenType
-  expiresAt    DateTime
-  usedAt       DateTime?
-  createdAt    DateTime  @default(now())
-
-  user         User       @relation(fields: [userID], references: [id], onDelete: Cascade)
-
-  @@map("tokens")
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
 }
 
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
+  @@index([userId])
+  @@map("account")
+}
 
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-// ============================================================
-// ENUMS
-// ============================================================
-
-enum TokenType {
-  EMAIL_VERIFICATION
-  PASSWORD_RESET
+  @@index([identifier])
+  @@map("verification")
 }

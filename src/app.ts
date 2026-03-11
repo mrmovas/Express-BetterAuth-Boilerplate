@@ -2,24 +2,35 @@ import express, { Application } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
+import { toNodeHandler } from "better-auth/node";
+import { auth } from '@/lib/auth';
 import ejsLayouts from 'express-ejs-layouts';
 import path from 'path';
 
 import { env, isProduction } from '@/config/env.config';
 
 //MIDDLEWARE
-import { requestIdMiddleware, requestLoggerMiddleware } from '@/shared/middleware/requestLogger.middleware';
-import { sessionMiddleware } from '@/shared/middleware/session.middleware';
-import { generalRateLimiterMiddleware } from '@/shared/middleware/ratelimit.middleware';
+import { requestIdMiddleware, requestLoggerMiddleware } from '@/middleware/requestLogger.middleware';
+import { generalRateLimiterMiddleware } from '@/middleware/ratelimit.middleware';
+import { notFoundHandler } from '@/middleware/notFound.middleware';
+import { errorHandler } from '@/middleware/error.middleware';
 
 //ROUTES
-import webRoutes from '@/core/web/web.route';
-import authRoutes from '@/core/auth/auth.route';
-//import userRoutes from './modules/user/user.routes';
+import webRoutes from '@/routes/web/web.route';
 
 
 
 const app: Application = express();
+
+
+
+
+/**
+ * AUTHENTICATION HANDLER
+ */
+
+app.all('/api/auth/{*any}', toNodeHandler(auth));
+
 
 
 
@@ -69,8 +80,8 @@ app.set('trust proxy', 1); // Trust first proxy, enables req.ip to resolve corre
  */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
-app.set('layout', 'layout');
 app.use(ejsLayouts);
+app.set('layout', 'layouts/main');
 app.use(express.static(path.join(__dirname, '../public')));
 
 
@@ -89,19 +100,9 @@ app.use(requestLoggerMiddleware);
 
 
 /**
- * SESSION MIDDLEWARE
+ * RATE LIMITING MIDDLEWARE FOR ALL ROUTES
  */
 
-app.use(sessionMiddleware);
-
-
-
-
-/**
- * RATE LIMITING MIDDLEWARE
- */
-
-//General rate limiter for all routes
 app.use(generalRateLimiterMiddleware);
 
 
@@ -111,8 +112,7 @@ app.use(generalRateLimiterMiddleware);
  * API ROUTES
  */
 
-app.use('/', webRoutes);  
-//app.use('/api/auth', authRoutes);
+app.use('/', webRoutes);
 
 
 
@@ -122,8 +122,8 @@ app.use('/', webRoutes);
  * Must be defined after all other app.use() and routes calls to catch errors from them.
  */
 
-//app.use(notFoundHandler);
-//app.use(errorHandler);
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 
 

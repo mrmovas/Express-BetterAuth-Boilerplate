@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= locals.title ?? 'App' %></title>
-    <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-
 <nav>
     <a href="/" class="brand">auth.</a>
     <div class="nav-links">
         <% if (locals.user) { %>
-            <a href="/profile"><%= user.firstName %></a>
+            <a href="/profile"><%= user.name %></a>
             <form action="/logout" method="POST" style="display:inline">
                 <button type="submit" class="btn-ghost" style="padding:6px 14px;font-size:13px">Logout</button>
             </form>
@@ -22,14 +12,3 @@
         <% } %>
     </div>
 </nav>
-
-<main>
-    <%- body %>
-</main>
-
-<footer>
-    &copy; <%= new Date().getFullYear() %> auth boilerplate
-</footer>
-
-</body>
-</html>

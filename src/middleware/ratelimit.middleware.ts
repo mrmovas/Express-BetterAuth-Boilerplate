@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 
 import { env } from '@/config/env.config';
 
-import { sendTooManyRequests } from '@/shared/utils/response.util';
+import { sendTooManyRequests } from '@/utils/response.util';
 
 
 

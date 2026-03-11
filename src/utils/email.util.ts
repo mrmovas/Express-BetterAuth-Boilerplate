@@ -2,8 +2,8 @@ import { getEmailTransporter } from '@/config/email.config';
 
 import { env } from '@/config/env.config';
 
-import { logger } from '@/shared/utils/logger.util';
-import { getCtx } from '@/shared/utils/requestContext.utils';
+import { logger } from '@/utils/logger.util';
+import { getCtx } from '@/utils/requestContext.utils';
 
 
 
@@ -43,8 +43,7 @@ export async function sendEmail(to: string, template: EmailTemplate) {
 
 
 // SEND VERIFICATION EMAIL
-export async function sendVerificationEmail(email: string, token: string): Promise<boolean> {
-    const verificationUrl = `${env.APP_URL}/api/auth/verify-email?token=${token}`;
+export async function sendVerificationEmail(email: string, verificationUrl: string): Promise<boolean> {
     const text = `
 Welcome! Please Verify Your Email
 
@@ -64,8 +63,7 @@ If you didn't create an account, you can safely ignore this email.`
 
 
 // SEND PASSWORD RESET EMAIL
-export async function sendPasswordResetEmail(email: string, token: string): Promise<boolean> {
-    const resetUrl = `${env.APP_URL}/reset-password?token=${token}`;
+export async function sendPasswordResetEmail(email: string, resetUrl: string): Promise<boolean> {
     const text = `
 Password Reset Request
 

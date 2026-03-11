@@ -1,0 +1,132 @@
+<div style="display:flex;flex-direction:column;gap:24px;width:100%;max-width:480px">
+
+    <%# PROFILE CARD %>
+    <div class="profile-card">
+
+        <div class="profile-header">
+            <div class="avatar">
+                <%= user.firstName[0].toUpperCase() %><%= user.lastName[0].toUpperCase() %>
+            </div>
+            <div>
+                <h1><%= user.firstName %> <%= user.lastName %></h1>
+                <span class="role-badge"><%= user.role %></span>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <% if (locals.message) { %>
+            <div class="alert alert-<%= message.type %>" style="margin-bottom:16px"><%= message.text %></div>
+        <% } %>
+
+        <dl class="info-grid">
+            <dt>Email</dt>
+            <dd><%= user.email %></dd>
+
+            <dt>Email verified</dt>
+            <dd>
+                <% if (user.emailVerified) { %>
+                    <span style="color:var(--success)">✓ Verified</span>
+                <% } else { %>
+                    <span style="color:var(--error)">✗ Not verified</span>
+                    &nbsp;·&nbsp;
+                    <a href="/auth?authType=verify-email">Resend link</a>
+                <% } %>
+            </dd>
+
+            <dt>User ID</dt>
+            <dd class="mono"><%= user.id %></dd>
+
+            <dt>Member since</dt>
+            <dd>
+                <%= new Date(user.createdAt).toLocaleDateString('en-GB', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                }) %>
+            </dd>
+        </dl>
+
+        <div class="divider"></div>
+
+        <%# betterAuthClient.signOut() %>
+        <button type="button" class="btn-logout" onclick="handleLogout()">Sign out</button>
+
+    </div>
+
+
+    <%# CHANGE PASSWORD CARD %>
+    <div class="profile-card">
+        <h2 style="font-family:var(--serif);font-size:22px;margin-bottom:20px">Change password</h2>
+
+        <div id="change-pass-msg"></div>
+
+        <%# betterAuthClient.changePassword({ currentPassword, newPassword }) %>
+        <div class="auth-form">
+
+            <div class="field">
+                <label for="oldPassword">Current password</label>
+                <input id="oldPassword" type="password"
+                    placeholder="••••••••" autocomplete="current-password">
+            </div>
+
+            <div class="field">
+                <label for="newPassword">New password</label>
+                <input id="newPassword" type="password"
+                    placeholder="Min 8 chars, upper, lower, number, symbol"
+                    autocomplete="new-password">
+            </div>
+
+            <button type="button" class="btn-primary" onclick="handleChangePassword()">Change password →</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ---------------------------------------------------------------------------
+// LOGOUT
+// betterAuthClient.signOut()
+// ---------------------------------------------------------------------------
+async function handleLogout() {
+    const { error } = await betterAuthClient.signOut();
+    if (error) return alert(error.message ?? 'Sign out failed.');
+    window.location.href = '/';
+}
+
+// ---------------------------------------------------------------------------
+// CHANGE PASSWORD
+// betterAuthClient.changePassword({ currentPassword, newPassword })
+// Displays result in the #change-pass-msg div — no page reload.
+// ---------------------------------------------------------------------------
+async function handleChangePassword() {
+    const msgEl      = document.getElementById('change-pass-msg');
+    const oldPassword = document.getElementById('oldPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+
+    msgEl.className = '';
+    msgEl.textContent = '';
+    msgEl.style.marginBottom = '';
+
+    if (!oldPassword || !newPassword) {
+        msgEl.className = 'alert alert-error';
+        msgEl.textContent = 'Please fill in both password fields.';
+        msgEl.style.marginBottom = '16px';
+        return;
+    }
+
+    const { data, error } = await betterAuthClient.changePassword({
+        currentPassword: oldPassword,
+        newPassword,
+    });
+
+    if (error) {
+        msgEl.className = 'alert alert-error';
+        msgEl.textContent = error.message ?? 'Could not change password.';
+    } else {
+        msgEl.className = 'alert alert-success';
+        msgEl.textContent = 'Password changed successfully.';
+        document.getElementById('oldPassword').value = '';
+        document.getElementById('newPassword').value = '';
+    }
+    msgEl.style.marginBottom = '16px';
+}
+</script>
