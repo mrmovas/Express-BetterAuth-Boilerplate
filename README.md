@@ -3,7 +3,7 @@
 A production-ready authentication boilerplate built with Express, TypeScript, and PostgreSQL -
 signup, email verification, login, password reset, and session management, all with security best practices and a clean architecture.
 
-> **v1.0.0** — Ships with a hand-rolled auth implementation to demonstrate the full flow end to end. A future release will replace this with a battle-tested library (BetterAuth or similar) while keeping the rest of the stack intact.
+> **v0.1.0** — Ships with a hand-rolled auth implementation to demonstrate the full flow end to end. A future release will replace this with a battle-tested library (BetterAuth or similar) while keeping the rest of the stack intact.
 
 ---
 
@@ -100,10 +100,10 @@ The plain token is sent to the user via email. Only the SHA-256 hash is stored i
 
 ## Roadmap
 
-**v1.0.0 — current release**
+**v0.1.0 — current release**
 Hand-rolled auth to demonstrate the full implementation. Complete auth lifecycle, EJS SSR frontend, REST API, rate limiting, validation, structured logging.
 
-**v2.0.0 — planned**
+**v1.0.0 — planned**
 Swap custom auth for [BetterAuth](https://www.better-auth.com/) or similar. Adds OAuth (Google, Discord), optional 2FA. Same stack, same project structure — only the auth layer changes.
 
 ---
