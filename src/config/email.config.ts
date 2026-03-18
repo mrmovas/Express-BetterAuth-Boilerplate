@@ -1,6 +1,6 @@
 import nodemailer, { Transporter } from 'nodemailer';
 
-import { logger } from '@/shared/utils/logger.util';
+import { logger } from '@/utils/logger.util';
 import { env } from '@/config/env.config';
 
 

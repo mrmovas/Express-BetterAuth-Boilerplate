@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodType, ZodError } from 'zod';
-import { sendValidationError } from '@/shared/utils/response.util';
-import { logger, reqCtx } from '@/shared/utils/logger.util';
+import { sendValidationError } from '@/utils/response.util';
+import { logger, reqCtx } from '@/utils/logger.util';
 
 
 

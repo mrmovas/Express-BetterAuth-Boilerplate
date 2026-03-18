@@ -54,7 +54,3 @@ export const auth = betterAuth({
         }
     }
 });
-
-export const authClient = createAuthClient({
-    baseURL: env.BETTER_AUTH_BASE_URL,
-});

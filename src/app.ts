@@ -3,8 +3,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
 import { toNodeHandler } from "better-auth/node";
-import { auth } from '@/lib/auth';
-import ejsLayouts from 'express-ejs-layouts';
+import { auth } from '@/utils/auth';
 import path from 'path';
 
 import { env, isProduction } from '@/config/env.config';
@@ -14,9 +13,10 @@ import { requestIdMiddleware, requestLoggerMiddleware } from '@/middleware/reque
 import { generalRateLimiterMiddleware } from '@/middleware/ratelimit.middleware';
 import { notFoundHandler } from '@/middleware/notFound.middleware';
 import { errorHandler } from '@/middleware/error.middleware';
+import { sessionMiddleware } from './middleware/session.middleware';
 
 //ROUTES
-import webRoutes from '@/routes/web/web.route';
+import routes from '@/routes/index.routes';
 
 
 
@@ -29,7 +29,7 @@ const app: Application = express();
  * AUTHENTICATION HANDLER
  */
 
-app.all('/api/auth/{*any}', toNodeHandler(auth));
+app.use('/api/auth', toNodeHandler(auth));
 
 
 
@@ -80,9 +80,16 @@ app.set('trust proxy', 1); // Trust first proxy, enables req.ip to resolve corre
  */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
-app.use(ejsLayouts);
-app.set('layout', 'layouts/main');
 app.use(express.static(path.join(__dirname, '../public')));
+
+
+
+
+/**
+ * SESSION MIDDLEWARE
+ * - sessionMiddleware: Custom middleware that retrieves the user's session using Better-Auth and attaches the user and session information to res.locals for easy access in routes and views.
+ */
+app.use(sessionMiddleware);
 
 
 
@@ -112,7 +119,7 @@ app.use(generalRateLimiterMiddleware);
  * API ROUTES
  */
 
-app.use('/', webRoutes);
+app.use('/', routes);
 
 
 

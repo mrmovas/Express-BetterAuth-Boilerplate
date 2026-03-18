@@ -1,7 +1,7 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
-import { logger } from '@/shared/utils/logger.util';
-import { getCtx } from '@/shared/utils/requestContext.utils';
+import { logger } from '@/utils/logger.util';
+import { getCtx } from '@/utils/requestContext.util';
 
 import { env } from '@/config/env.config';
 

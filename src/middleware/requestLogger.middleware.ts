@@ -4,8 +4,8 @@ import morgan from 'morgan';
 
 import { isProduction } from '@/config/env.config';
 
-import { logger, morganStream } from '@/shared/utils/logger.util';
-import { requestContext } from '@/shared/utils/requestContext.utils';
+import { logger, morganStream } from '@/utils/logger.util';
+import { requestContext } from '@/utils/requestContext.util';
 
 
 
@@ -54,7 +54,7 @@ export const detailedRequestLogger = (req: Request, res: Response, next: NextFun
         path: req.path,
         query: Object.keys(req.query).length > 0 ? Object.keys(req.query) : undefined, // Log keys only, never values
         userAgent: req.get('user-agent'),
-        userID: req.session?.user?.id ?? null,
+        userID: res.locals.session?.user?.id ?? null, 
     });
 
 
@@ -70,7 +70,7 @@ export const detailedRequestLogger = (req: Request, res: Response, next: NextFun
             path: req.path,
             statusCode: res.statusCode,
             duration: `${duration}ms`,
-            userID: req.session?.user?.id ?? null,
+            userID: res.locals.session?.user?.id ?? null,
         });
     });
 

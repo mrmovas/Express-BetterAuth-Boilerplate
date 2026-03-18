@@ -3,7 +3,7 @@ import { getEmailTransporter } from '@/config/email.config';
 import { env } from '@/config/env.config';
 
 import { logger } from '@/utils/logger.util';
-import { getCtx } from '@/utils/requestContext.utils';
+import { getCtx } from '@/utils/requestContext.util';
 
 
 
