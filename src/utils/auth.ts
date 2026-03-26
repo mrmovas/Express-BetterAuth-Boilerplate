@@ -17,6 +17,13 @@ export const auth = betterAuth({
     secret: env.BETTER_AUTH_SECRET,
 
 
+    advanced: {
+		ipAddress: {
+			ipAddressHeaders: ["x-forwarded-for", "x-real-ip"], // Headers to check for the client's IP address, in order of priority
+		},
+	},
+
+
     rateLimit: {
         enabled: true,
         storage: "database",
@@ -123,7 +130,7 @@ export const auth = betterAuth({
     logger: {
         level: env.BETTER_AUTH_LOG_LEVEL || 'info',
         log(level, message, ...args) {
-            logger[level](`[BetterAuth] ${message}`, ...args);
+            logger.log(level, `[BetterAuth] ${message}`, ...args);
         }
     }
 });

@@ -9,5 +9,5 @@ import path from 'path';
 
 export function sendHtml(res: Response, filename: string) {
     if(!filename.endsWith('.html')) filename += '.html';
-    res.sendFile(filename, { root: path.join(__dirname, '../views') });
+    res.sendFile(filename, { root: path.join(__dirname, '../../views') });
 }

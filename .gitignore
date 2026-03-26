@@ -5,5 +5,5 @@ logs/*
 /src/generated/prisma
 
 .env
-*.log
 package-lock.json
+public/styles.css

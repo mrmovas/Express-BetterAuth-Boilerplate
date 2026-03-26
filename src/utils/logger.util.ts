@@ -39,7 +39,10 @@ export const logger = winston.createLogger({
     defaultMeta: { service: 'auth-API' },
     transports: [
         // CONSOLE OUTPUT
-        new winston.transports.Console({ format: env.NODE_ENV === 'production' ? customFormat : consoleFormat }),
+        new winston.transports.Console({
+            format: consoleFormat,
+        }),
+
 
         // DAILY ROTATE FILES
         // This creates files like: logs/2026-02-14.log
@@ -49,10 +52,12 @@ export const logger = winston.createLogger({
             zippedArchive: true,      // Compresses old files
             maxSize: '20m',           // Split file if it hits 20MB in one day
             maxFiles: '30d',          // Automatically delete files older than 30 days
-            level: 'info'             // Includes info, warn, error, and http
+            level: 'http',             // Log all levels to this file
         }),
 
+
         // SEPARATE FILE FOR WARNINGS AND ERRORS
+        // This creates files like: logs/security/2026-02-14-security.log
         new DailyRotateFile({
             filename: 'logs/security/%DATE%-security.log',
             datePattern: 'YYYY-MM-DD',

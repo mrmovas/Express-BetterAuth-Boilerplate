@@ -1,17 +1,15 @@
 import { z } from 'zod';
 import { config } from 'dotenv';
-config();
+config({ quiet: true });
 
 
 
 // DEFINING ENVIRONMENT VARIABLES SCHEMA
 const envSchema = z.object({
     // SERVER
-    NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+    NODE_ENV: z.enum(['development', 'production']).default('development'),
+    LOG_LEVEL: z.enum(['error', 'warn', 'info', 'http', 'debug']).default('info'),
     PORT: z.string().default('3000'),
-
-    // LOGGING
-    LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
 
     // DATABASE
     DATABASE_URL: z.string().nonempty('[ENV] Database URL is required'),
