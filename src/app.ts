@@ -32,15 +32,7 @@ const app: Application = express();
  */
 
 app.use(helmet({
-    contentSecurityPolicy: isProduction ? {
-        directives: {
-            defaultSrc: ["'self'"],
-            connectSrc: ["'self'"],
-            formAction: ["'self'"],
-            baseUri: ["'none'"],
-        },
-        //reportOnly: true, // Set to true to only report violations without enforcing the policy
-    } : false, // Disable CSP in development for easier debugging
+    contentSecurityPolicy: false, // Disable CSP because express app is only serving API endpoints, and CSP is more relevant for apps serving HTML content. You can enable and configure it if you plan to serve frontend assets from the same server in the future.
     crossOriginResourcePolicy: { policy: 'same-site' }, // Prevents the browser from loading resources from a different origin, protecting against cross-origin attacks
     crossOriginOpenerPolicy: { policy: 'same-origin' }, // Isolates the browsing context to prevent cross-origin attacks
     frameguard: { action: 'deny' }, // Prevents the app from being embedded in iframes, protecting against clickjacking
