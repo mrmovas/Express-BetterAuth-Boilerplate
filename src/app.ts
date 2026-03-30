@@ -35,23 +35,13 @@ app.use(helmet({
     contentSecurityPolicy: isProduction ? {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: [
-                "'self'",
-                "'unsafe-inline'",
-                "'unsafe-eval'",
-                "https://cdn.jsdelivr.net",
-            ],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-            fontSrc: ["'self'", "https://fonts.gstatic.com"],
             connectSrc: ["'self'"],
             formAction: ["'self'"],
             baseUri: ["'none'"],
-            //imgSrc: ["'self'", "data:", "https://images.example.com"],
-            upgradeInsecureRequests: [], // Automatically upgrade HTTP requests to HTTPS
         },
         //reportOnly: true, // Set to true to only report violations without enforcing the policy
     } : false, // Disable CSP in development for easier debugging
-    crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allows resources to be loaded from different origins, necessary for serving static files and APIs
+    crossOriginResourcePolicy: { policy: 'same-site' }, // Prevents the browser from loading resources from a different origin, protecting against cross-origin attacks
     crossOriginOpenerPolicy: { policy: 'same-origin' }, // Isolates the browsing context to prevent cross-origin attacks
     frameguard: { action: 'deny' }, // Prevents the app from being embedded in iframes, protecting against clickjacking
     hsts: { maxAge: 31536000, includeSubDomains: true, preload: true }, // Enforces HTTPS for all connections to the server
