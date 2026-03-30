@@ -43,7 +43,6 @@ Alpine.js is currently used for the frontend, but anyone who prefers a different
 | Database | PostgreSQL |
 | ORM | Prisma |
 | Authentication | Better-Auth |
-| Frontend | Alpine.js |
 | Logging | Winston |
 
 ---
