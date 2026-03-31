@@ -1,6 +1,6 @@
 # Express-BetterAuth-Boilerplate
 
-> **Current version 1.1.3-beta** - A backend boilerplate for handling authentication in Express.js using Better-Auth, Prisma with PostgreSQL and Typescript.
+> **Current version 1.1.2-beta** - A backend boilerplate for handling authentication in Express.js using Better-Auth, Prisma with PostgreSQL and Typescript.
 
 > ℹ️ **Info:**
 > At the moment, this project is still in development and is not yet ready for production use.
