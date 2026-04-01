@@ -1,19 +1,30 @@
-import { execSync } from "child_process";
 import type { Kysely } from 'kysely';
 import { sql } from 'kysely';
 import { db } from '@/config/database.config';
 import { Database } from "@/types/database.types";
 import { logger } from '@/utils/logger.util';
+import { getMigrations } from "better-auth/db/migration";
+import { auth } from "@/utils/auth";
+
+
 
 
 // This function runs the BetterAuth CLI to check/create betterAuth's tables.
 async function runBetterAuthMigrations() {
     try {
         logger.info("Running BetterAuth migrations...");
-        await execSync("npx @better-auth/cli migrate", {
-            stdio: "inherit", // streams output to your console
-            cwd: process.cwd(),
-        });
+
+        const { toBeCreated, toBeAdded, runMigrations } = await getMigrations(auth.options);
+
+        if (toBeCreated.length === 0 && toBeAdded.length === 0) {
+            logger.info("BetterAuth schema is already up to date.");
+            return;
+        }
+
+        logger.info(`Tables to create: ${toBeCreated.map(t => t.table).join(", ")}`);
+        logger.info(`Columns to add: ${toBeAdded.map(t => t.table).join(", ")}`);
+        
+        await runMigrations();
         logger.info("BetterAuth migrations completed.");
     } catch (error) {
         logger.error("BetterAuth migration failed:", error);
