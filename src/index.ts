@@ -5,6 +5,7 @@ import { env } from '@/config/env.config';
 import { testConnection, closeDatabase } from '@/config/database.config';
 import { initializeEmailTransporter } from '@/config/email.config';
 import { logger } from '@/utils/logger.util';
+import setupDatabase from './bootstrap/database-setup';
 
 
 
@@ -27,6 +28,9 @@ async function startServer(): Promise<void> {
         process.exit(1);
     }
 
+    // SETUP DATABASE (table checks, etc.)
+    logger.info('Setting up database...');
+    await setupDatabase();
 
     // INITIALIZE EMAIL TRANSPORTER
     logger.info('Initializing email transporter...');

@@ -1,6 +1,6 @@
 # Express-BetterAuth-Boilerplate
 
-> **Current version 1.1.2-beta** - A backend boilerplate for handling authentication in Express.js using Better-Auth, Prisma with PostgreSQL and Typescript.
+> **Current version 1.2.0-beta** - A backend boilerplate for handling authentication in Express.js using Better-Auth, Kysely with PostgreSQL and Typescript.
 
 > ℹ️ **Info:**
 > At the moment, this project is still in development and is not yet ready for production use.
@@ -11,7 +11,7 @@
 
 This project is being created to learn and provide a template for me and others to quickly set up authentication in Express.js applications to avoid having to rewrite the same code for every project, to help focus on the unique features of the application and not have to worry about the authentication.
 
-This boilerplate is using [Better-Auth](https://better-auth.com/) for handling authentication, Prisma for database management and PostgreSQL as the database. It also uses TypeScript for type safety and a better development experience.
+This boilerplate is using [Better-Auth](https://better-auth.com/) for handling authentication, Kysely for database management and PostgreSQL as the database. It also uses TypeScript for type safety and a better development experience.
 Better-Auth is set up and ready. All routes and middleware for authentication are ready to use.
 
 Alpine.js is currently used for the frontend, but anyone who prefers a different framework or library can easily replace or remove it as needed.
@@ -24,7 +24,7 @@ Alpine.js is currently used for the frontend, but anyone who prefers a different
 - Password reset functionality.
 - Email verification for new users.
 - Protected routes that require authentication or specific user roles.
-- PostgreSQL database management with Prisma.
+- PostgreSQL database management with Kysely.
 - Logging with Winston.
   - File logging, log rotation, and different log levels (info, warn, error).
   - Custom log format that includes timestamps, log levels, and messages.
@@ -41,7 +41,7 @@ Alpine.js is currently used for the frontend, but anyone who prefers a different
 | Language | TypeScript |
 | Framework | Express.js |
 | Database | PostgreSQL |
-| ORM | Prisma |
+| Query Builder | Kysely |
 | Authentication | Better-Auth |
 | Logging | Winston |
 
@@ -61,11 +61,7 @@ npm install
 
 You will need to host a PostgreSQL database or use a service to host it for you, and then set the `DATABASE_URL` environment variable in the `.env` file to point to your database.
 
-```bash
-npm run db:migrate # This maps your schema.prisma to the actual database tables.
-
-npm run db:generate # This generates the Prisma client based on your schema.prisma file.
-```
+`src/bootstrap/database-setup.ts` is set up to check for the necessary tables and create them if they don't exist, so you can simply run the development server and it will handle the database setup for you.
 
 ## Type Checking
 To check for type errors in the project, you can run the following command:
