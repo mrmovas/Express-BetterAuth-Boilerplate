@@ -2,19 +2,10 @@
 
 > **Current version 1.3.0** - A backend boilerplate for handling authentication in Express.js using Better-Auth, Kysely with PostgreSQL and Typescript.
 
-> ℹ️ **Info:**
-> At the moment, this project is still in development and is not yet ready for production use.
-> However, at the current state, it is ready to be used as a starting point if you know how to set up your pages and routes, and how to use the authentication middleware provided in this boilerplate.
-
-> ⚠️ **Note:**
-> This project, with simple words, is the backend; anything related to the frontend will be removed from the repo because I am working on a new repo [Nuxt-BetterAuth-Boilerplate](https://github.com/mrmovas/Nuxt-BetterAuth-Boilerplate), which will be a frontend template using this backend template.  
-
 This project is being created to learn and provide a template for me and others to quickly set up authentication in Express.js applications to avoid having to rewrite the same code for every project, to help focus on the unique features of the application and not have to worry about the authentication.
 
 This boilerplate is using [Better-Auth](https://better-auth.com/) for handling authentication, Kysely for database management and PostgreSQL as the database. It also uses TypeScript for type safety and a better development experience.
 Better-Auth is set up and ready. All routes and middleware for authentication are ready to use.
-
-Alpine.js is currently used for the frontend, but anyone who prefers a different framework or library can easily replace or remove it as needed.
 
 ---
 
