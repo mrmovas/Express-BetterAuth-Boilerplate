@@ -1,6 +1,6 @@
 # Express-BetterAuth-Boilerplate
 
-> **Current version 1.1.2-beta** - A backend boilerplate for handling authentication in Express.js using Better-Auth, Kysely with PostgreSQL and Typescript.
+> **Current version 1.2.0-beta** - A backend boilerplate for handling authentication in Express.js using Better-Auth, Kysely with PostgreSQL and Typescript.
 
 > ℹ️ **Info:**
 > At the moment, this project is still in development and is not yet ready for production use.
