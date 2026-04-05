@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 
 import { env } from "@/config/env.config";
-import { pool } from "@/config/database.config";
+import { db } from "@/config/database.config";
 
 import { sendVerificationEmail, sendPasswordResetEmail } from '@/utils/email.util';
 import { logger } from "@/utils/logger.util";
@@ -55,7 +55,10 @@ export const auth = betterAuth({
         }
     },
 
-    database: pool,
+    database: {
+        type: "postgres",
+        db: db,
+    },
     
     emailAndPassword: { 
         enabled: true, 
