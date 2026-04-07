@@ -1,4 +1,4 @@
-# Express-BetterAuth-Boilerplate
+# Express BetterAuth Starter Template
 
 > **Current version 1.3.3** - A backend boilerplate for handling authentication in Express.js using Better-Auth, Kysely with PostgreSQL and Typescript.
 
