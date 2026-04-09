@@ -1,11 +1,23 @@
 # Express BetterAuth Starter Template
 
-> **Current version 1.3.3** - A backend boilerplate for handling authentication in Express.js using Better-Auth, Kysely with PostgreSQL and Typescript.
+> **Current version 1.3.3** - A a production-ready REST API server built with Express.js using Better-Auth, Kysely with PostgreSQL and Typescript.
 
-This project is being created to learn and provide a template for me and others to quickly set up authentication in Express.js applications to avoid having to rewrite the same code for every project, to help focus on the unique features of the application and not have to worry about the authentication.
+## Overview
 
-This boilerplate is using [Better-Auth](https://better-auth.com/) for handling authentication, Kysely for database management and PostgreSQL as the database. It also uses TypeScript for type safety and a better development experience.
-Better-Auth is set up and ready. All routes and middleware for authentication are ready to use.
+Express-BetterAuth-Boilerplate is a production-ready REST API server built with Express and TypeScript. It provides a complete authentication foundation (email/password, email verification, password reset) via [Better-Auth](https://better-auth.com/), backed by PostgreSQL with Kysely as the query builder. The boilerplate is designed to be cloned and extended, API routes are intentionally empty, while all cross-cutting concerns (auth, logging, rate limiting, validation, error handling) are pre-wired.
+
+> This project is being created to provide a template for me and others to quickly set up a backend server in Express.js applications to avoid having to rewrite the same code for every project, to help focus on the unique features of the application and not have to worry about the authentication.
+
+---
+
+## Documentation
+
+| Document | Description |
+|---|---|
+| [Architecture](./docs/architecture.md) | Project structure, request lifecycle, middleware stack, logging, validation, and response format |
+| [Authentication](./docs/authentication.md) | Better-Auth configuration, password policy, rate limits, email flows, and user fields |
+| [Environment](./docs/environment.md) | All environment variables, and validation |
+| [Deployment](./docs/deployment.md) | Docker setup, dev and prod compose |
 
 ---
 
@@ -24,23 +36,25 @@ Better-Auth is set up and ready. All routes and middleware for authentication ar
 
 ---
 
-## Tech Stack
+## Quick Start
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js |
-| Language | TypeScript |
-| Framework | Express.js |
-| Database | PostgreSQL |
-| Query Builder | Kysely |
-| Authentication | Better-Auth |
-| Logging | Winston |
+### Prerequisites
+- Node.js
+- PostgreSQL database (local or hosted)
+- An SMTP server for email testing (e.g. [Mailpit](https://mailpit.axllent.org/))
 
----
+### Setup
 
-## Installation
+```bash
+git clone https://github.com/mrmovas/Express-BetterAuth-Boilerplate.git
+cd Express-BetterAuth-Boilerplate
+```
 
-You can create the `.env` file from the `example.env` file.
+You can create the `.env` file from the `.env.example` file.
+
+```bash
+cp .env.example .env
+```
 
 To install the dependencies, run the following command in the root directory of the project:
 
@@ -48,23 +62,18 @@ To install the dependencies, run the following command in the root directory of 
 npm install
 ```
 
-## Database Setup
-
-You will need to host a PostgreSQL database or use a service to host it for you, and then set the `DATABASE_URL` environment variable in the `.env` file to point to your database.
-
-`src/bootstrap/database-setup.ts` is set up to check for the necessary tables and create them if they don't exist, so you can simply run the development server and it will handle the database setup for you.
-
-## Type Checking
-To check for type errors in the project, you can run the following command:
+To start the development server locally, run the following command:
 
 ```bash
-npm run typecheck
+npm run dev
 ```
+
+The database tables are created automatically on first run - no migrations to run manually.
 
 ## Running with Docker
 
 ### Development
-Starts the app with hot reload, PostgreSQL, and [Mailpit](http://localhost:8025) for email testing.
+Starts the app with hot reload, PostgreSQL, and [Mailpit](https://mailpit.axllent.org/) for email testing.
 
 ```bash
 docker compose -f docker-compose.dev.yml up
@@ -86,40 +95,20 @@ docker compose -f docker-compose.prod.yml up --build
 
 ---
 
-## Development Launch (without Docker)
-To start the development server locally, run the following command:
+## Scripts
 
-```bash
-npm run dev
-```
-
----
-
-## Roadmap
-The next updates for this boilerplate will include:
-
-### Logging
-Logging is still something I haven't fully figured out yet.
-I don't want to just dump logs into a file. I'm trying to understand how to handle this properly in a more professional way.
-
-### API Features / Example Implementations
-I want to create implementations to demonstrate API routes with features like users could create text posts, and an admin role could delete users, remove posts, or manage other features that I'll define later.
-
-### Documentation
-It's important to properly document how everything works. That way, both I and anyone else can understand the structure of the project, how it's built, and how to use it as a starting point for building our own ideas on top of it.
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the development server with hot reload |
+| `npm run build` | Compile TypeScript to JavaScript and resolve path aliases |
+| `npm start` | Start the compiled production server |
+| `npm run typecheck` | Check for type errors in the project |
 
 ---
 
 ## Contributing
 
-Contributions are welcome! If you have any suggestions, improvements or bug reports, please feel free to open an issue or submit a pull request.
-
-To create a pull request, follow these steps:
-- Fork the repository and create a new branch (e.g., `feature/new-feature` or `fix/fix-reset-password`).
-- Make your changes and commit them with clear and descriptive messages.
-- Push your changes and open a pull request against the `main` branch of this repository.
-
-Please keep changes focused, large pull requests may be harder to review and merge. 
+[Contributing](./CONTRIBUTING.md) - contributions, suggestions, and feedback are welcome!
 
 ---
 
