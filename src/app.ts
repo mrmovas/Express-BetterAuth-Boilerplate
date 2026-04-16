@@ -15,7 +15,7 @@ import { errorHandler } from '@/middleware/error.middleware';
 import { sessionMiddleware } from './middleware/session.middleware';
 
 //ROUTES
-// import routes from '@/api/index.routes';
+import routes from '@/api/index.routes';
 
 
 
@@ -66,11 +66,13 @@ app.use(cors({
  * - express.json(): Parses incoming requests with JSON payloads and is based on body-parser.
  * - express.urlencoded(): Parses incoming requests with URL-encoded payloads. Extended option allows for rich objects and arrays to be encoded into the URL-encoded format.
  * - compression: Compresses response bodies for all requests that traverse through the middleware, improving performance by reducing the size of the response body.
+ * - Favicon route: Handles requests to /favicon.ico to prevent unnecessary logging of 404 errors for the favicon. It responds with a 204 No Content status, indicating that the request was successful but there is no content to send back.
  */
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 app.use(compression());
+app.get('/favicon.ico', (_req, res) => res.status(204).end())
 
 
 
@@ -117,7 +119,7 @@ app.use(generalRateLimiterMiddleware);
  * API ROUTES
  */
 
-// app.use('/api', routes);
+app.use('/api', routes);
 
 
 
