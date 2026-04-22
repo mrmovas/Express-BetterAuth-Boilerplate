@@ -1,6 +1,6 @@
 # Express BetterAuth Starter Template
 
-> **Current version 1.3.4** - A a production-ready REST API server built with Express.js using Better-Auth, Kysely with PostgreSQL and Typescript.
+> **Current version 1.3.5** - A a production-ready REST API server built with Express.js using Better-Auth, Kysely with PostgreSQL and Typescript.
 
 ## Overview
 
