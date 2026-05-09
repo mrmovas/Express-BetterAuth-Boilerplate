@@ -49,20 +49,26 @@ async function startServer(): Promise<void> {
 async function shutdown(signal: "SIGINT" | "SIGTERM" ): Promise<void> {
     logger.info(`Received ${signal}. Starting graceful shutdown...`);
 
-    // CLOSE DATABASE CONNECTION
-    await closeDatabase();
-
-    // CLOSE HTTP SERVER
-    server.close(() => {
-        logger.info('HTTP server closed');
-        process.exit(0);
-    });
-
     // IF SERVER DOESN'T CLOSE IN TIME, FORCE EXIT
-    setTimeout(() => {
-        logger.warn('Forcing shutdown due to timeout');
+    const forceExit = setTimeout(() => {
+        logger.warn("Forcing shutdown due to timeout");
         process.exit(1);
-    }, 10000); // 10 seconds
+    }, 10000);
+    forceExit.unref();
+
+    try {
+        // CLOSE DATABASE CONNECTION
+        await closeDatabase();
+
+        // CLOSE HTTP SERVER
+        server.close(() => {
+            logger.info('HTTP server closed');
+        });
+    } catch (error) {
+        logger.error('Error during shutdown', { error });
+    } finally {
+        process.exit(0);
+    }
 }
 
 
