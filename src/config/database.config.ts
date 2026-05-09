@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 import { logger } from '@/utils/logger.util';
 import { getCtx } from '@/utils/requestContext.util';
 import { env } from '@/config/env.config';
-import type { Database } from '@/types/database.types';
+import type { DB as DatabaseSchema } from '@/types/database.types';
 
 // Threshold in ms above which a query is considered slow and logged at warn
 const SLOW_QUERY_THRESHOLD_MS = 500;
@@ -19,7 +19,7 @@ export const pool = new Pool({ connectionString: env.DATABASE_URL });
 
 // KYSELY CLIENT (singleton)
 // In development, hot-reload can create multiple instances — this pattern prevents that.
-export const db = new Kysely<Database>({
+export const db = new Kysely<DatabaseSchema>({
     dialect: new PostgresDialect({ pool }),
     log(event) {
         const ctx = getCtx();
