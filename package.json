@@ -7,6 +7,7 @@
         "dev": "tsx watch src/index.ts",
         "build": "tsc && tsc-alias",
         "db:codegen": "kysely-codegen --out-file ./src/types/database.types.ts --dialect postgres",
+        "db:better-auth:migrate": "npx auth@1.6.10 migrate",
         "start": "node dist/index.js",
         "typecheck": "tsc --noEmit"
     },

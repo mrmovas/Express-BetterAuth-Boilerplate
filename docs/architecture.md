@@ -34,9 +34,12 @@ src/
 │
 ├── api/                        # API route handlers (empty - add routes here)
 │
+├── bootstrap/
+│   └── database-setup.ts       # Runs Better-Auth migrations automatically on startup via getMigrations()
+│
 ├── config/
 │   ├── env.config.ts           # Zod-validated environment variables
-│   ├── database.config.ts      # Kysely client + pg pool + testConnection/closeDatabase
+│   ├── database.config.ts      # pg pool + db (app-scoped) + authDB (Better-Auth-scoped) + testConnection/closeDatabase
 │   ├── email.config.ts         # Nodemailer transporter singleton
 │   └── config.ts               # (reserved for additional config)
 │
@@ -141,10 +144,14 @@ router.get('/admin/data', requireAuth, requireRole('admin'), handler);
 
 ## Database
 
-The PostgreSQL connection is managed through a shared `pg.Pool` instance ([src/config/database.config.ts](../src/config/database.config.ts)):
+The PostgreSQL connection is managed through a shared `pg.Pool` instance ([src/config/database.config.ts](../src/config/database.config.ts)). Three Kysely instances are derived from it:
 
-- **Kysely** uses this pool for type-safe query building across the app.
-- **Better-Auth** uses the same pool internally for its own tables.
+| Export | Type | Used by |
+|---|---|---|
+| `db` | App-scoped via `$omitTables<BetterAuthTables>()` — no auth tables | App route handlers and services |
+| `authDB` | Auth-scoped via `$pickTables<BetterAuthTables>()` — auth tables only | Better-Auth config |
+
+The underlying `KyselyClient` instance is not exported — `db` and `authDB` are the only entry points. This means app code cannot accidentally query Better-Auth tables, and Better-Auth cannot touch app tables — enforced at the TypeScript level.
 
 ### Slow Query Logging
 

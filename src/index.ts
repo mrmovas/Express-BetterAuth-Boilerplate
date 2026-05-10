@@ -5,6 +5,7 @@ import { env } from '@/config/env.config';
 import { testConnection, closeDatabase } from '@/config/database.config';
 import { initializeEmailTransporter } from '@/config/email.config';
 import { logger } from '@/utils/logger.util';
+import { runBetterAuthMigrations } from './bootstrap/database-setup';
 
 
 
@@ -26,6 +27,9 @@ async function startServer(): Promise<void> {
         logger.error('Failed to connect to database');
         process.exit(1);
     }
+
+    // SETUP DATABASE
+    await runBetterAuthMigrations();
 
     // INITIALIZE EMAIL TRANSPORTER
     logger.info('Initializing email transporter...');

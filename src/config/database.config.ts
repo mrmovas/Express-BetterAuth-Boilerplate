@@ -19,7 +19,7 @@ export const pool = new Pool({ connectionString: env.DATABASE_URL });
 
 // KYSELY CLIENT (singleton)
 // In development, hot-reload can create multiple instances — this pattern prevents that.
-export const db = new Kysely<DatabaseSchema>({
+const KyselyClient = new Kysely<DatabaseSchema>({
     dialect: new PostgresDialect({ pool }),
     log(event) {
         const ctx = getCtx();
@@ -44,6 +44,10 @@ export const db = new Kysely<DatabaseSchema>({
         }
     },
 });
+
+type BetterAuthTables = "account" | "rateLimit" | "session" | "user" | "verification";
+export const db = KyselyClient.$omitTables<BetterAuthTables>();
+export const authDB = KyselyClient.$pickTables<BetterAuthTables>();
 
 
 

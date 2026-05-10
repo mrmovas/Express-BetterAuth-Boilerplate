@@ -71,5 +71,10 @@ The prod stack builds the compiled image and runs app + a PostgreSQL 17 database
 **Start the stack:**
 
 ```bash
+git pull
 docker compose -f docker-compose.prod.yml up -d --build
 ```
+
+Better-Auth migrations run automatically on startup — no manual migration step required.
+
+> When the database schema changes, run `npm run db:better-auth:migrate` and `npm run db:codegen` on your dev machine, commit the updated `src/types/database.types.ts`, and push before deploying.
